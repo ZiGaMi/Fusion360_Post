@@ -421,18 +421,23 @@ function onOpen() {
   }
 
   // ZIGA: Added safety line
+  writeln("");
+  writeComment(" ================================================ ");
   writeComment(" Save Startup Line ");
-  writeComment("  G90	- Absolute position "); 
-  writeComment("  G94	- Feedrate per minute "); 
-  writeComment("  91.1 	- Incremental arc position "); 
-  writeComment("  G40 	- Tool radius compensation off "); 
-  writeComment("  G49 	- Tool height compensation off ");
-  writeComment("  G17	- XY workplane ");
-  writeComment("  G21	- Using milimiters ");
+  writeComment(" ================================================ ");
+  writeComment("    G90	  - Absolute position "); 
+  writeComment("    G94	  - Feedrate per minute "); 
+  writeComment("    91.1 	- Incremental arc position "); 
+  writeComment("    G40 	 - Tool radius compensation off "); 
+  writeComment("    G49 	 - Tool height compensation off ");
+  writeComment("    G17	  - XY workplane ");
+  writeComment("    G21	  - Using milimiters ");
 
   // absolute coordinates and feed per min
   writeBlock(gAbsIncModal.format(90), gFeedModeModal.format(94), gFormat.format(91.1), gFormat.format(40), gFormat.format(49), gPlaneModal.format(17), gUnitModal.format(21));
 
+  // ZIGA: Always using milimeters
+  /*
   switch (unit) {
   case IN:
     writeBlock(gUnitModal.format(20));
@@ -441,6 +446,13 @@ function onOpen() {
     writeBlock(gUnitModal.format(21));
     break;
   }
+  */
+
+  // ZIGA: CAM starts
+  writeln("");
+  writeComment(" ================================================ ");
+  writeComment(" CAM Features Start Code	 ");
+  writeComment(" ================================================ ");
 }
 
 function onComment(message) {
@@ -1976,7 +1988,14 @@ function writeRetract() {
 
 function onClose() {
   writeln("");
+  writeComment(" ================================================ ");
+  writeComment("  End of program	 ");
+  writeComment(" ================================================ ");
+  writeComment("  M5	  - Stop spindle "); 
+  writeComment("  M9  - Cooling OFF "); 
+  writeComment("  M30 - Program end "); 
 
+  onCommand(COMMAND_STOP_SPINDLE);
   setCoolant(COOLANT_OFF);
 
   writeRetract(Z);

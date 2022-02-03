@@ -420,8 +420,18 @@ function onOpen() {
     }
   }
 
+  // ZIGA: Added safety line
+  writeComment(" Save Startup Line ");
+  writeComment("  G90	- Absolute position "); 
+  writeComment("  G94	- Feedrate per minute "); 
+  writeComment("  91.1 	- Incremental arc position "); 
+  writeComment("  G40 	- Tool radius compensation off "); 
+  writeComment("  G49 	- Tool height compensation off ");
+  writeComment("  G17	- XY workplane ");
+  writeComment("  G21	- Using milimiters ");
+
   // absolute coordinates and feed per min
-  writeBlock(gAbsIncModal.format(90), gFeedModeModal.format(94), gFormat.format(91.1), gFormat.format(40), gFormat.format(49), gPlaneModal.format(17));
+  writeBlock(gAbsIncModal.format(90), gFeedModeModal.format(94), gFormat.format(91.1), gFormat.format(40), gFormat.format(49), gPlaneModal.format(17), gUnitModal.format(21));
 
   switch (unit) {
   case IN:
@@ -1941,6 +1951,9 @@ function writeRetract() {
       return;
     }
   }
+
+  // ZIGA: Not needed
+  /*
   if (words.length > 0) {
     switch (method) {
     case "G28":
@@ -1958,6 +1971,7 @@ function writeRetract() {
       return;
     }
   }
+  */
 }
 
 function onClose() {

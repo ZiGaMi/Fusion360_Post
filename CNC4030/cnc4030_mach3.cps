@@ -391,6 +391,12 @@ function onOpen() {
       }
     }
 
+
+    // ZIGA: Additional comment
+    writeComment(" ================================================ ");
+    writeComment("    LIST OF TOOLS ");
+    writeComment(" ================================================ ");
+
     var tools = getToolTable();
     if (tools.getNumberOfTools() > 0) {
       for (var i = 0; i < tools.getNumberOfTools(); ++i) {
@@ -1040,7 +1046,9 @@ function onSection() {
     gMotionModal.reset();
     writeBlock(gPlaneModal.format(17));
 
-    if (!machineConfiguration.isHeadConfiguration()) {
+
+    // ZIGA: Removed tool compenstion
+    /*if (!machineConfiguration.isHeadConfiguration()) {
       writeBlock(
         gAbsIncModal.format(90),
         gMotionModal.format(0), xOutput.format(initialPosition.x), yOutput.format(initialPosition.y)
@@ -1055,6 +1063,16 @@ function onSection() {
         zOutput.format(initialPosition.z), hFormat.format(lengthOffset)
       );
     }
+    */
+
+    // ZIGA: Left that as it was before
+    writeBlock(
+      gAbsIncModal.format(90),
+      gMotionModal.format(0), xOutput.format(initialPosition.x), yOutput.format(initialPosition.y)
+    );
+
+
+
     zIsOutput = true;
   } else {
     writeBlock(

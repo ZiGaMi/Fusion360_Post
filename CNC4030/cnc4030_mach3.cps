@@ -337,7 +337,8 @@ function onOpen() {
   writeComment(" Author   " + "Ziga Miklosic " );
 
   var d = new Date(); // output current date and time
-  writeComment(" " + localize("Date     ") + d.toLocaleDateString());
+  writeComment(" " + localize("Date     ") + d.toLocaleDateString())
+  writeComment(" " + localize("Time     ") + d.toLocaleTimeString())
 
   if (programComment)
   {

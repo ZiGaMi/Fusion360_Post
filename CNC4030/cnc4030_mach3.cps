@@ -17,6 +17,9 @@ legal = "Copyright (C) 2012-2021 by Autodesk, Inc.";
 certificationLevel = 2;
 minimumRevision = 45702;
 
+// ZIGA: Script version
+script_version = "V0.0.1"
+
 longDescription = "Generic milling post for Mach3.";
 
 extension = "tap";
@@ -321,12 +324,35 @@ function onOpen() {
 
   sequenceNumber = getProperty("sequenceNumberStart");
 
-  if (programName) {
-    writeComment(programName);
+  // ZIGA: Added header
+  writeln("");
+  writeComment(" Post script version:  " + script_version );
+  writeComment(" ================================================ ");
+  
+  if (programName)
+  {
+    writeComment(" File     " + programName + " " );
   }
-  if (programComment) {
-    writeComment(programComment);
+
+  writeComment(" Author   " + "Ziga Miklosic " );
+
+  if (programComment)
+  {
+    writeComment(" Brief    " + programComment + " " );
   }
+  
+  //writeComment(" Date: " +  getParameter("generated-by"));
+  writeComment(" ================================================ ");
+  writeln("");
+
+  /*
+  if (hasParameter("generated-by") && getParameter("generated-by")) {
+    writeComment(" " + localize("CAM") + ": " + getParameter("generated-by"));
+    }
+    if (hasParameter("document-path") && getParameter("document-path")) {
+    writeComment(" " + localize("Document") + ": " + getParameter("document-path"));
+    }
+   */
 
   lastSubprogram = 0;
 
@@ -1988,6 +2014,8 @@ function writeRetract() {
 
 function onClose() {
   writeln("");
+
+  // ZIGA: Outro actions description
   writeComment(" ================================================ ");
   writeComment("  End of program	 ");
   writeComment(" ================================================ ");

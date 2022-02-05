@@ -18,7 +18,7 @@ certificationLevel = 2;
 minimumRevision = 45702;
 
 // ZIGA: Script version
-script_version = "V0.0.1"
+script_version = "V0.1.0"
 
 longDescription = "Generic milling post for Mach3.";
 

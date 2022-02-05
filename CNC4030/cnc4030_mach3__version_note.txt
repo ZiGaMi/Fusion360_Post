@@ -1,0 +1,24 @@
+============================================================
+ Version 0.1.0 (05.02.2022)
+============================================================
+
+ Brief:
+	Basis for that script was taken from official Fusion360 Post
+	Processor Online Library. 
+	
+	Base library: mach3mill.cps
+
+ Features/Changes:
+	- Added program header
+	- Removed G43 line 
+	- Renove M8 line - colling ON command
+	- Stop spindle at the end of program 
+	- Remove G28 - goto machine home location
+	
+ Solved Issues:
+
+ Known Issues:
+
+ TODO: 
+
+============================================================

@@ -326,27 +326,26 @@ function onOpen() {
 
   // ZIGA: Added header
   writeln("");
-  writeComment(" Post script version:  " + script_version );
-  writeComment(" ================================================ ");
+  writeln("( Post script version:  " + script_version + " )");
+  writeln("( ================================================ )");
   
   if (programName)
   {
-    writeComment(" File     " + programName + " " );
+    writeln("( File:   " + programName + " )" );
   }
 
-  writeComment(" Author   " + "Ziga Miklosic " );
+  writeln("( Author: " + "Ziga Miklosic )" );
 
   var d = new Date(); // output current date and time
-  writeComment(" " + localize("Date     ") + d.toLocaleDateString())
-  writeComment(" " + localize("Time     ") + d.toLocaleTimeString())
+  writeln("( Date:   " + d.toLocaleDateString() + " )")
+  writeln("( Time:   " + d.toLocaleTimeString() + " )")
 
   if (programComment)
   {
-    writeComment(" Brief    " + programComment + " " );
+    writeln("( Brief:  " + programComment + " )" );
   }
   
-  //writeComment(" Date: " +  getParameter("generated-by"));
-  writeComment(" ================================================ ");
+  writeln("( ================================================ )");
   writeln("");
 
   /*
@@ -397,9 +396,9 @@ function onOpen() {
 
 
     // ZIGA: Additional comment
-    writeComment(" ================================================ ");
-    writeComment("    LIST OF TOOLS ");
-    writeComment(" ================================================ ");
+    writeln("( ================================================ )");
+    writeln("(        List of needed tools                      )");
+    writeln("( ================================================ )");
 
     var tools = getToolTable();
     if (tools.getNumberOfTools() > 0) {
@@ -458,9 +457,9 @@ function onOpen() {
 
   // ZIGA: Added safety line
   writeln("");
-  writeComment(" ================================================ ");
-  writeComment(" Save Startup Line ");
-  writeComment(" ================================================ ");
+  writeln("( ================================================ )");
+  writeln("(            Save Starup Line                      )");
+  writeln("( ================================================ )");
   writeComment("    G90	  - Absolute position "); 
   writeComment("    G94	  - Feedrate per minute "); 
   writeComment("    91.1 	- Incremental arc position "); 
@@ -486,9 +485,9 @@ function onOpen() {
 
   // ZIGA: CAM starts
   writeln("");
-  writeComment(" ================================================ ");
-  writeComment(" CAM Features Start Code	 ");
-  writeComment(" ================================================ ");
+  writeln("( ================================================ )");
+  writeln("(       CAM Features Start Code                    )");
+  writeln("( ================================================ )");
 }
 
 function onComment(message) {
@@ -2038,9 +2037,9 @@ function onClose() {
   writeln("");
 
   // ZIGA: Outro actions description
-  writeComment(" ================================================ ");
-  writeComment("  End of program	 ");
-  writeComment(" ================================================ ");
+  writeln("( ================================================ )");
+  writeln("(           End of program                         )");
+  writeln("( ================================================ )");
   writeComment("  M5	  - Stop spindle "); 
   writeComment("  M9  - Cooling OFF "); 
   writeComment("  M30 - Program end "); 

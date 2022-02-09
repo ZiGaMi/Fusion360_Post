@@ -1,6 +1,6 @@
 # ===============================================================================
-# @file:    fusion360_merge.py
-# @note:    Fusion360 different tools merging script
+# @file:    main.py
+# @note:    Fusion360 different tools G-code merging script
 # @author:  Ziga Miklosic
 # @date:    09.02.2022
 # @brief:   This scripts merge together all selected G-code generated files
@@ -24,7 +24,8 @@ import os
 # Supported G-code file extension
 SUPPORT_FILE_END = [ ".tap", ".gcode" ]
 
-
+# Show merge script at end of program
+OPEN_END_SCRIPT = True
 
 
 # ===============================================================================

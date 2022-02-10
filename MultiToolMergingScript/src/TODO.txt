@@ -1,0 +1,10 @@
+
+All generated G-Code shall have a unique coding naming style of files...
+
+E.g.:
+
+0_bla_V1.0.tap
+1_bla_V1.0.tap
+2_bla_V1.0.tap
+
+Tool sequence will be coded with first number!

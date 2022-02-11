@@ -16,6 +16,7 @@
 # ===============================================================================
 import sys
 import os
+import shutil
 
 import subprocess
 import xml.etree.ElementTree as ET
@@ -177,16 +178,16 @@ class GcodeParser:
     def __get_files(self):
 
         # Get working directory
-        self.dir = input( "Input working directory: " )
+        self.work_dir = input( "Input working directory: " )
 
         # Check if dir exist
-        if os.path.isdir( self.dir ):
+        if os.path.isdir( self.work_dir ):
 
             # Get interresting files
             print("")
             print("List of G-code files [*%s]" % SUPPORT_FILE_END )
             print("---------------------------------------------------------")
-            for file in os.listdir( self.dir ):
+            for file in os.listdir( self.work_dir ):
 
                 # Get file name and extension
                 file_name, file_extension = os.path.splitext( file )
@@ -211,15 +212,22 @@ class GcodeParser:
             self.merge_file_name = input("Input end file name: ")
 
             # Create directory
-            dir = self.dir + "\\out\\" 
+            dir = self.work_dir + "\\out\\" 
             if not os.path.exists(dir):
                 os.makedirs(dir)
 
             # Assemble path
-            dir = dir + self.merge_file_name + SUPPORT_FILE_END
+            file_dir = dir + self.merge_file_name + SUPPORT_FILE_END
 
-            # Create merge file
-            self.merged_file = open( dir, "w" )
+            # Copy firt TAP file
+            shutil.copyfile( str(self.work_dir + "\\" + self.g_code_files[0]), file_dir )
+
+            # Open merged file for read and append mode
+            self.merged_file = open( file_dir, "r+" )
+
+            # Change header
+            self.merged_file.seek(0)
+            self.merged_file.write("This is first line")
 
             #self.merged_file.close()
 

@@ -18,6 +18,7 @@ import sys
 import os
 
 import subprocess
+import xml.etree.ElementTree as ET
 
 # ===============================================================================
 #       CONSTANTS
@@ -51,7 +52,9 @@ class ExtTool:
     
     def __init__(self):
 
-        self.tool_paths = []
+        # List of supported programs
+        # Name | Target path
+        self.tool_path = ""
 
         # Get all listed tools in file
         self.__read_tools()
@@ -62,30 +65,26 @@ class ExtTool:
         # Get current directory
         cwd = str( os.getcwd() )
         
-        # Remove src
+        # Remove src from current directory
         cwd = cwd[:-3]
 
         # Assemble path
-        file_path = cwd + "tools\external_tools.txt"
+        file_path = cwd + "tools\external_tools.xml"
 
-        # Read file
-        try:
-            with open( file_path, "r" ) as tool_file:
-                for n, line in enumerate(tool_file):
-                    dbg_print(line)
-                    for tool in SUPPORT_EXT_TOOL_NOTATION:
-                        if line.find(tool) > 0:
-                            dbg_print(line)
-                            self.tool_paths.append( line.split("'")[0] )
+        # Read XML file
+        tree = ET.parse( file_path )
+        root = tree.getroot()
 
-            # Close file
-            tool_file.close()
+        # Get name, target and path location
+        self.tool_name = root.find('Name').text
+        self.tool_path = root.find('Path').text
+        self.tool_target = root.find('Target').text
 
-        except:
-            print("Warning: Missing path to external tools! \nPlace external_tools.txt file into \\tools directory if you want to use external tools for visualization.\n")
+        dbg_print( self.tool_name )
+        dbg_print( self.tool_path )
+        dbg_print( self.tool_target )
 
 
-        print(self.tool_paths)
 
     
 

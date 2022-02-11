@@ -24,8 +24,11 @@ import xml.etree.ElementTree as ET
 #       CONSTANTS
 # ===============================================================================
 
+# SCript version
+SCRIPT_VERSION = "V0.0.1"
+
 # Supported G-code file extension
-SUPPORT_FILE_END = [ ".tap" ]
+SUPPORT_FILE_END = ".tap"
 
 # Show merge script at end of program
 OPEN_END_SCRIPT = True
@@ -48,6 +51,20 @@ def dbg_print(msg):
     if DEBUG_EN:
         print(msg)
 
+# ===============================================================================
+# @brief:   Introduction text
+#
+# @return:       void 
+# ===============================================================================
+def intro():
+    os.system("cls")
+    print("===================================================================")
+    print("     Fusion360 G-code Merging script")
+    print("")
+    print(" Version: %s" % SCRIPT_VERSION )
+    print("===================================================================")
+    print("")
+
 
 # ===============================================================================
 # @brief:  Main entry function
@@ -56,16 +73,16 @@ def dbg_print(msg):
 # ===============================================================================
 def main():
     
-    os.system("cls")
+    # Intro 
+    intro()
 
-
+    # Create parser
     parser = GcodeParser()
 
     #tool = ExtTool()
-
     #tool.open_file( "test" )
 
-    input("Press any key to exit...\n")
+    input("\n\nPress any key to exit...\n")
 
 
 
@@ -101,12 +118,9 @@ class ExtTool:
 
         # Get current directory
         cwd = str( os.getcwd() )
-        
-        # Remove src from current directory
-        cwd = cwd[:-3]
 
         # Assemble path
-        file_path = cwd + "tools\external_tools.xml"
+        file_path = cwd + "\external_tools.xml"
 
         try:
             # Read XML file
@@ -134,13 +148,89 @@ class ExtTool:
             subprocess.Popen(str("notepad.exe " + str(file)))
 
 
-
+# ===============================================================================
+# @brief:  G-code Parser
+#
+# ===============================================================================
 class GcodeParser:
 
     def __init__(self):
+        
+        # List of interesting files
+        self.g_code_files = []
 
-        for file in os.listdir():
-            print( file )
+        # Get files
+        self.__get_files()
+
+        # Create new merged file
+        self.__create_new_file()
+
+        # Merge files
+        self.__merge_files()
+
+        # Clean
+        self.__clean()
+
+
+
+
+    def __get_files(self):
+
+        # Get working directory
+        self.dir = input( "Input working directory: " )
+
+        # Check if dir exist
+        if os.path.isdir( self.dir ):
+
+            # Get interresting files
+            print("")
+            print("List of G-code files [*%s]" % SUPPORT_FILE_END )
+            print("---------------------------------------------------------")
+            for file in os.listdir( self.dir ):
+
+                # Get file name and extension
+                file_name, file_extension = os.path.splitext( file )
+
+                # Filter files
+                if SUPPORT_FILE_END == file_extension:
+                    print( " -> %s" % file )
+                    self.g_code_files.append( file )
+
+            print("\n")
+
+        else:
+            print("ERROR: Inputed directory does not exist!")
+
+
+    def __create_new_file(self):
+
+        # Is there any file to merge
+        if len(self.g_code_files) > 0:
+
+            # Get merged file name
+            self.merge_file_name = input("Input end file name: ")
+
+            # Create directory
+            dir = self.dir + "\\out\\" 
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+
+            # Assemble path
+            dir = dir + self.merge_file_name + SUPPORT_FILE_END
+
+            # Create merge file
+            self.merged_file = open( dir, "w" )
+
+            #self.merged_file.close()
+
+
+    def __merge_files(self):
+        pass
+
+
+    def __clean(self):
+        pass
+
 
 
 

@@ -36,25 +36,70 @@ OPEN_END_SCRIPT = True
 # Debug enabled
 DEBUG_EN = True
 
+
 # ===============================================================================
-#       CLASSES
+#       FUNCTIONS
 # ===============================================================================
 
-
+# ===============================================================================
+# @brief:   Debug mode prints
+#
+# @param[in]:    msg    - Debug message
+# @return:       void 
+# ===============================================================================
 def dbg_print(msg):
     if DEBUG_EN:
         print(msg)
 
 
+# ===============================================================================
+# @brief:  Main entry function
+#
+# @return:       void
+# ===============================================================================
+def main():
+    
+    os.system("cls")
+    
 
+
+    tool = ExtTool()
+
+    tool.open_file( "test" )
+
+    input("Press any key to exit...\n")
+
+
+
+
+# ===============================================================================
+#       CLASSES
+# ===============================================================================
+
+# ===============================================================================
+# @brief:  External tool class
+#
+#   Using external tool for visualization
+#
+# ===============================================================================
 class ExtTool:
     
+    # ===============================================================================
+    # @brief:  Constructor
+    #
+    # @return:       void
+    # ===============================================================================
     def __init__(self):
 
         # Get all listed tools in file
         self.__read_tools()
 
 
+    # ===============================================================================
+    # @brief:  Read XML file for external tool details
+    #
+    # @return:       data           - CAN payload 
+    # ===============================================================================
     def __read_tools(self):
 
         # Get current directory
@@ -66,49 +111,35 @@ class ExtTool:
         # Assemble path
         file_path = cwd + "tools\external_tools.xml"
 
-        # Read XML file
-        tree = ET.parse( file_path )
-        root = tree.getroot()
+        try:
+            # Read XML file
+            tree = ET.parse( file_path )
+            root = tree.getroot()
 
-        # Get name, target and path location
-        self.tool_name = root.find('Name').text
-        self.tool_path = root.find('Path').text
-        self.tool_target = root.find('Target').text
+            # Get name, target and path location
+            self.tool_name = root.find('Name').text
+            self.tool_path = root.find('Path').text
+            self.tool_target = root.find('Target').text
 
-        dbg_print( self.tool_name )
-        dbg_print( self.tool_path )
-        dbg_print( self.tool_target )
+            dbg_print( self.tool_name )
+            dbg_print( self.tool_path )
+            dbg_print( self.tool_target )
 
+        except:
+            # If no file is found, use default windows editor
+            self.tool_target = "notepad.exe"
 
+    # ===============================================================================
+    # @brief:  Open file with defined external tool
+    #
+    # @param[in]:   file - File to display
+    # @return:      void 
+    # ===============================================================================
     def open_file(self, file):
         subprocess.Popen(str(self.tool_target + " " + str(file)))
 
 
     
-
-# ===============================================================================
-#       FUNCTIONS
-# ===============================================================================
-
-
-
-# ===============================================================================
-# @brief:  Main entry function
-#
-# @return:       void
-# ===============================================================================
-def main():
-    
-    os.system("cls")
-    print("Hello...")
-
-
-    tool = ExtTool()
-
-    tool.open_file( "test" )
-
-    input("Press any key to exit...\n")
-
 
 # ===============================================================================
 #       MAIN ENTRY

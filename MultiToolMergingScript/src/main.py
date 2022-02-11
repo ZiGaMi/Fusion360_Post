@@ -60,7 +60,6 @@ def dbg_print(msg):
 def main():
     
     os.system("cls")
-    
 
 
     tool = ExtTool()
@@ -70,6 +69,8 @@ def main():
     input("Press any key to exit...\n")
 
 
+def to_raw(string):
+    return fr"{string}"
 
 
 # ===============================================================================
@@ -121,9 +122,10 @@ class ExtTool:
             self.tool_path = root.find('Path').text
             self.tool_target = root.find('Target').text
 
-            dbg_print( self.tool_name )
-            dbg_print( self.tool_path )
-            dbg_print( self.tool_target )
+            # Check if path exist
+            if ( False == os.path.isfile( self.tool_target )) or ( False == os.path.isdir( self.tool_path )):
+                print("WARNING: External tool path invalid! \nWARNING: Change specified paths inside >>>tools\\external_tools.xml<<< in order to use external tools for visualization.")
+                self.tool_target = "notepad.exe"
 
         except:
             # If no file is found, use default windows editor

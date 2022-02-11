@@ -1,0 +1,3 @@
+VSCode 'C:\Users\zigam\AppData\Local\Programs\Microsoft VS Code\'
+Notepad++ 
+Notepad 

@@ -49,12 +49,7 @@ def dbg_print(msg):
 
 class ExtTool:
     
-    
     def __init__(self):
-
-        # List of supported programs
-        # Name | Target path
-        self.tool_path = ""
 
         # Get all listed tools in file
         self.__read_tools()
@@ -85,6 +80,9 @@ class ExtTool:
         dbg_print( self.tool_target )
 
 
+    def open_file(self, file):
+        subprocess.Popen(str(self.tool_target + " " + str(file)))
+
 
     
 
@@ -92,12 +90,6 @@ class ExtTool:
 #       FUNCTIONS
 # ===============================================================================
 
-
-
-def open_editor(file_path):
-
-    #path = r"C:/Users/zigam/AppData/Local/Programs/Microsoft VS Code/"
-    subprocess.Popen(["C:/Users/zigam/AppData/Local/Programs/Microsoft VS Code/Code.exe"])
 
 
 # ===============================================================================
@@ -113,6 +105,7 @@ def main():
 
     tool = ExtTool()
 
+    tool.open_file( "test" )
 
     input("Press any key to exit...\n")
 

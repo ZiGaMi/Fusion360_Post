@@ -16,10 +16,13 @@
 # ===============================================================================
 import sys
 import os
+import time
 import shutil
 
 import subprocess
 import xml.etree.ElementTree as ET
+
+from file_manager import FileManager
 
 # ===============================================================================
 #       CONSTANTS
@@ -66,6 +69,37 @@ def intro():
     print("===================================================================")
     print("")
 
+        
+
+
+def get_g_files(work_dir):
+
+    g_files = []
+
+    # Check if dir exist
+    if os.path.isdir( work_dir ):
+
+        # Get interresting files
+        print("")
+        print("List of G-code files (filter: *%s)" % SUPPORT_FILE_END )
+        print("---------------------------------------------------------")
+        for file in os.listdir( work_dir ):
+
+            # Get file name and extension
+            file_name, file_extension = os.path.splitext( file )
+
+            # Filter files
+            if SUPPORT_FILE_END == file_extension:
+                print( " [%s] %s" % ( len(g_files)+1, file ))
+                g_files.append(work_dir + "\\" + file)
+
+        print("\n")
+
+    else:
+        print("ERROR: Inputed directory does not exist!")
+
+    return g_files
+
 
 # ===============================================================================
 # @brief:  Main entry function
@@ -77,13 +111,34 @@ def main():
     # Intro 
     intro()
 
+    # Get working directory
+    work_dir = input( "Input working directory: " )
+
+    # Get g-code files
+    g_files = get_g_files( work_dir )
+
+    # Open 1# file
+    g_file_0 = FileManager( g_files[0])
+    
+    # Merged file
+    g_file_merged = FileManager( work_dir + "\\" + "Merged.tap")
+
+
+
+
+    # Close files
+    g_file_0.close()
+    g_file_merged.close()
+
     # Create parser
-    parser = GcodeParser()
+    #parser = GcodeParser()
 
     #tool = ExtTool()
     #tool.open_file( "test" )
 
     input("\n\nPress any key to exit...\n")
+
+
 
 
 

@@ -39,15 +39,21 @@ class FileManager:
     # @param[in]:    file - File to operate with
     # @return:       void
     # ===============================================================================
-    def __init__(self, file):
+    def __init__(self, file_name):
 
-        self.file = file
+        self.file_name = file_name
 
-        if os.path.isfile(self.file):
-            self.__dbg_print("Open.....%s" % self.file)
-        
-        else:
-            self.__dbg_print("Created.....%s" % self.file)
+        try:
+            if os.path.isfile(self.file_name):
+                self.file = open( self.file_name, "a" )
+                self.__dbg_print("Open.....%s" % self.file_name)
+            
+            else:
+                self.file = open( self.file_name, "w" )
+                self.__dbg_print("Created.....%s" % self.file_name)
+        except:
+            pass
+
 
 
 
@@ -60,7 +66,7 @@ class FileManager:
 
         # Close the file
         try:
-            self.__dbg_print("Closing.....%s" % self.file)
+            self.__dbg_print("Closing.....%s" % self.file_name)
         except:
             pass
 
@@ -94,10 +100,23 @@ class FileManager:
     def find(self, str):
         pass
 
+    def erase(self):
+        try:
+            # Check if open
+            if not self.file.closed:
+               self.file.close()
+            
+            # Erase by opening for reading
+            self.file = open( self.file_name, "w" )
+
+            self.__dbg_print("Erasing.....%s" % self.file_name)
+        except:
+            pass
+
+
     def close(self):
         try:
-            
-            self.__dbg_print("Closing.....%s" % self.file)
+            self.__dbg_print("Closing.....%s" % self.file_name)
         except:
             pass
 

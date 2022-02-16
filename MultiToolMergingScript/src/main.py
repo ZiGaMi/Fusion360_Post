@@ -121,7 +121,8 @@ def main():
     g_file_0 = FileManager( g_files[0])
     
     # Merged file
-    g_file_merged = FileManager( work_dir + "\\" + "Merged.tap")
+    g_file_merged = FileManager( work_dir + "\\out\\" + "Merged.tap")
+    g_file_merged.erase()
 
 
 

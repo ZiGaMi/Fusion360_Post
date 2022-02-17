@@ -27,79 +27,83 @@ import os
 # ===============================================================================
 
 # ===============================================================================
-# @brief:  File manager
+# @brief  File manager
 # ===============================================================================
 class FileManager:
+
+    # Access type
+    READ_WRITE  = "w+"  # This mode erase file content
+    READ_ONLY   = "r"
+    APPEND      = "a+"   # This mode puts pointer to EOF. Access: Read & Write
     
     # ===============================================================================
     # @brief:  Constructor
     #
     #       Create file if don't exsist jet.
     #
-    # @param[in]:    file - File to operate with
-    # @return:       void
+    # @param[in]    file   - File to operate with
+    # @param[in]    access - File access type
+    # @return       void
     # ===============================================================================
-    def __init__(self, file_name):
+    def __init__(self, file_name, access=READ_ONLY):
 
         self.file_name = file_name
 
         try:
             if os.path.isfile(self.file_name):
-                self.file = open( self.file_name, "a" )
+                self.file = open( self.file_name, access )
                 self.__dbg_print("Open.....%s" % self.file_name)
             
             else:
-                self.file = open( self.file_name, "w" )
+                self.file = open( self.file_name, access )
                 self.__dbg_print("Created.....%s" % self.file_name)
-        except:
-            pass
-
-
-
-
+        except Exception as e:
+            print(e)
+            
     # ===============================================================================
-    # @brief:  Desctructor
+    # @brief  Desctructor
     #
-    # @return:       void
+    # @return      void
     # ===============================================================================
     def __del__(self):
 
         # Close the file
-        try:
-            self.__dbg_print("Closing.....%s" % self.file_name)
-        except:
-            pass
+        self.close()
 
     # ===============================================================================
-    # @brief:  Read file content from line
+    # @brief  Read file line
     #
-    # @param[in]    line - Line number
-    # @return:      void
+    # @return      void
     # ===============================================================================
-    def read(self, line):
-        pass
+    def read(self):
+
+        line = ""
+        try:
+            line = self.file.readline()
+
+        except Exception as e:
+            print(e)
+
+        return line
 
     # ===============================================================================
-    # @brief:  Read file content from line
+    # @brief  Read file content from line
     #
     # @param[in]    str     - String to insert to file
-    # @param[in]    line    - Line number where to inject string
-    # @return:      void
+    # @return       void
     # ===============================================================================
-    def write(self, str, line):
-        pass
+    def write(self, str):
+        try:
+            self.file.write(str)
+
+        except Exception as e:
+            print(e)
 
     # ===============================================================================
-    # @brief:  Find string in file
+    # @brief  Erase file content
     #
-    #   Return -1, -1 in case of no string is found!
-    #
-    # @param[in]    str         - String to find in file
-    # @return:      line,col    - Line and column of string start location 
-    # ===============================================================================      
-    def find(self, str):
-        pass
-
+    # @return      void
+    # ===============================================================================
     def erase(self):
         try:
             # Check if open
@@ -110,23 +114,44 @@ class FileManager:
             self.file = open( self.file_name, "w" )
 
             self.__dbg_print("Erasing.....%s" % self.file_name)
-        except:
-            pass
 
+        except Exception as e:
+            print(e)
 
+    # ===============================================================================
+    # @brief  Close working file
+    #
+    # @return      void
+    # ===============================================================================
     def close(self):
         try:
+            self.file.close()
             self.__dbg_print("Closing.....%s" % self.file_name)
-        except:
-            pass
 
+        except Exception as e:
+            print(e)
 
+    # ===============================================================================
+    # @brief  Debug print
+    #
+    # @note     All debug prints can be enabled/disabled via that function
+    #
+    # @param[in]    str     - String to print
+    # @return       void
+    # ===============================================================================
     def __dbg_print(self, str):
         print(str)
 
 
 
+# ===============================================================================
+# @brief  G-code Parser
+#
+# ===============================================================================
+class GcodeParser(FileManager):
 
+    def __init__(self):
+        pass
 
 
             

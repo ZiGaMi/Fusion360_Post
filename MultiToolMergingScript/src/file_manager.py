@@ -406,7 +406,7 @@ class GcodeParser(FileManager):
     #
     # @return      date, time - Date & time of generated G-code 
     # ===============================================================================
-    def get_author(self):
+    def get_date_time(self):
         return self.g_file_attr["date"], self.g_file_attr["time"]
 
     # ===============================================================================
@@ -414,7 +414,7 @@ class GcodeParser(FileManager):
     #
     # @return      brief - Brief description of project
     # ===============================================================================
-    def get_author(self):
+    def get_brief(self):
         return self.g_file_attr["brief"]
 
     # ===============================================================================
@@ -422,7 +422,7 @@ class GcodeParser(FileManager):
     #
     # @return      tool - Used tool
     # ===============================================================================
-    def get_author(self):
+    def get_tool(self):
         return self.g_file_attr["tool"]
 
     # ===============================================================================

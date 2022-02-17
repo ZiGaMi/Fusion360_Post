@@ -164,7 +164,6 @@ def write_header(file, parsed_files):
     file.write( "( Post script version: %s )\n" % parsed_files[0].get_post_ver())
     file.write( "( ================================================ )\n" )
 
-
     file.write( "( File:   %s_Merged )\n" % parsed_files[0].get_file_name())
     file.write( "( Author: %s )\n" % parsed_files[0].get_author() )
     file.write( "( Date:   %s )\n" % parsed_files[0].get_date_time()[0] )
@@ -172,12 +171,33 @@ def write_header(file, parsed_files):
     file.write( "( Brief:  %s )\n" % parsed_files[0].get_brief() )
     file.write( "\n" )
 
+    file.write( "( ================================================ )\n" )
+    file.write( "(           List of merged files                   )\n" )
+    file.write( "( ================================================ )\n" )
+    for idx, parse_file in enumerate(parsed_files):
+        file.write( "( [%s]  %s )\n" % ( idx+1, parse_file.get_file_name() ))
+    file.write( "\n" )
 
 
 
 
 def write_list_of_tools(file, parsed_files):
     pass
+
+def write_safe_startup(file):
+
+    file.write( "( ================================================ )\n" )
+    file.write( "(            Save Starup Line                      )\n" )
+    file.write( "( ================================================ )\n" )
+    file.write( "(    G90  - ABSOLUTE POSITION )\n" )
+    file.write( "(    G94  - FEEDRATE PER MINUTE )\n" )
+    file.write( "(    91.1 - INCREMENTAL ARC POSITION )\n" )
+    file.write( "(    G40  - TOOL RADIUS COMPENSATION OFF )\n" )
+    file.write( "(    G49  - TOOL HEIGHT COMPENSATION OFF )\n" )
+    file.write( "(    G17  - XY WORKPLANE )\n" )
+    file.write( "(    G21  - USING MILIMITERS )\n" )
+    file.write( "G90 G94 G91.1 G40 G49 G17 G21\n")
+    file.write( "\n" )
 
 def write_jobs(file, work_dir):
     pass
@@ -227,6 +247,9 @@ def main():
 
     # Write used tools
     write_list_of_tools(merged_file, g_files_parsed)
+
+    # Write safe starup file
+    write_safe_startup(merged_file)
 
     # Write jobs
     write_jobs(merged_file, work_dir)

@@ -33,6 +33,7 @@ class FileManager:
 
     # Access type
     READ_WRITE  = "r+"      # Puts pointer to start of file 
+    WRITE_ONLY  = "w"       # Erase complete file
     READ_ONLY   = "r"
     APPEND      = "a+"      # This mode puts pointer to EOF. Access: Read & Write
     
@@ -56,7 +57,7 @@ class FileManager:
                 self.__dbg_print("Open.....%s" % self.file_name)
             
             else:
-                self.file = open( self.file_name, access )
+                self.file = open( self.file_name, "w" )
                 self.__dbg_print("Created.....%s" % self.file_name)
         except Exception as e:
             print(e)
@@ -233,7 +234,6 @@ class GcodeParser(FileManager):
         self.__parse_tool()
 
         # Parse jobs
-        self.jobs = []
         self.__parse_jobs()
 
         # Close file at the end
@@ -294,7 +294,6 @@ class GcodeParser(FileManager):
         line = self.__read()
         self.g_file_attr["brief"] = line[len(self.BRIEF):-1]
 
-
     # ===============================================================================
     # @brief    Parse tool
     #
@@ -322,11 +321,26 @@ class GcodeParser(FileManager):
                 print("ERROR: Tool set not fund in %s" % self.g_file.file_name)
                 break
 
-
+    # ===============================================================================
+    # @brief    Parse CNC jobs
+    #
+    # @note     Intemediate files has .otap extension
+    #
+    # @return      void
+    # ===============================================================================
     def __parse_jobs(self):
         
+        # Intermediate file name
+        out_file_name = "%s%s.otap" % ( self.g_file.path(), self.g_file.name().replace(".tap", ""))
+
+        # Create intermediate file
+        file = FileManager(out_file_name,self.WRITE_ONLY)
+        
+        # Go thru file
         while True:
-            line = self.__read()
+            #line = self.__read()
+            raw_line = self.g_file.read()
+            line = raw_line.replace("( ", "").replace(" )", "")
 
             # Reached end of file
             if line.find(self.FILE_END) > 0:
@@ -341,34 +355,84 @@ class GcodeParser(FileManager):
                 # Job founded
                 if line.find(job_name) > 0:
                     self.g_file_attr["jobs"].append(line[1:-2]) # Ignore brackets
-
-                    # First job
-                    if 0 != job_nb:
-                        del(file)
-                    
-                    #print(self.g_file.name()+self.g_file_attr["jobs"][job_nb])
-                    job_file_name = "%s%s_JOB%s_%s.otap" % ( self.g_file.path(), self.g_file.name().replace(".tap", ""), job_nb, self.g_file_attr["jobs"][job_nb].replace(" ", "_"))
-                    print(job_file_name)
-                    #
-                    file = FileManager(job_file_name,self.READ_WRITE)
+                    file.write(raw_line)
 
             if job_nb > 0:
-                #file.write(line)
-                pass
-                    
+                file.write(raw_line) 
 
+        # Mark end of this file operation
+        file.write("( End of **%s**)\n" % self.g_file_attr["file"] )
+        file.write("( ================================================ )" )
 
-
-
+    # ===============================================================================
+    # @brief    Get G code file attributes
+    #
+    # @return      void
+    # ===============================================================================
     def get_attr(self):
         return self.g_file_attr
 
-    
-    def get_jobs(self, num):
-        return self.jobs
+    # ===============================================================================
+    # @brief    Get post version
+    #
+    # @return      script - Post script version
+    # ===============================================================================
+    def get_post_ver(self):
+        return self.g_file_attr["script"]
 
+    # ===============================================================================
+    # @brief    Get file name
+    #
+    # @return      file - G-code author
+    # ===============================================================================
+    def get_file_name(self):
+        return self.g_file_attr["file"]
 
-    
+    # ===============================================================================
+    # @brief    Get file name
+    #
+    # @return      author - Author of G-code
+    # ===============================================================================
+    def get_author(self):
+        return self.g_file_attr["author"]
+
+    # ===============================================================================
+    # @brief    Get data & time
+    #
+    # @return      date, time - Date & time of generated G-code 
+    # ===============================================================================
+    def get_author(self):
+        return self.g_file_attr["date"], self.g_file_attr["time"]
+
+    # ===============================================================================
+    # @brief    Get brief
+    #
+    # @return      brief - Brief description of project
+    # ===============================================================================
+    def get_author(self):
+        return self.g_file_attr["brief"]
+
+    # ===============================================================================
+    # @brief    Get tools
+    #
+    # @return      tool - Used tool
+    # ===============================================================================
+    def get_author(self):
+        return self.g_file_attr["tool"]
+
+    # ===============================================================================
+    # @brief    Get G code jobs
+    #
+    # @return      jobs - Name of founded jobs
+    # ===============================================================================
+    def get_jobs(self):
+        return self.g_file_attr["jobs"]
+
+    # ===============================================================================
+    # @brief    Print g-code attributes
+    #
+    # @return      void
+    # ===============================================================================
     def print_attr(self):
         print(" Post ver.: %s" % self.g_file_attr["script"] )
         print(" File:      %s" % self.g_file_attr["file"]   )
@@ -380,10 +444,7 @@ class GcodeParser(FileManager):
         print(" Jobs:      %s" % self.g_file_attr["jobs"]   )
     
 
-            
-
-
-
+        
 
 # ===============================================================================
 #       END OF FILE

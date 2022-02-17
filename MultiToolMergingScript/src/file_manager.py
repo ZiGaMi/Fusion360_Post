@@ -177,6 +177,11 @@ class FileManager:
         #print(str)
         pass
 
+    def name(self):
+        return self.file.name.split("\\")[-1]
+
+    def path(self):
+        return self.file.name[0:-len(self.name())]
 
 
 # ===============================================================================
@@ -193,7 +198,7 @@ class GcodeParser(FileManager):
     TIME            = "Time:   "
     BRIEF           = "Brief:  "
     TOOL_LIST       = "List of needed tools"
-    END             = "End of program"
+    FILE_END        = "End of program"
 
     # Possible CNC jobs
     LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOURS" ]
@@ -228,7 +233,8 @@ class GcodeParser(FileManager):
         self.__parse_tool()
 
         # Parse jobs
-        # TODO:
+        self.jobs = []
+        self.__parse_jobs()
 
         # Close file at the end
         self.g_file.close()
@@ -306,7 +312,7 @@ class GcodeParser(FileManager):
 
                 # Get tool
                 line = self.__read()
-                self.g_file_attr["tool"] = line[:-1]
+                self.g_file_attr["tool"] = line[1:-2]   # Ignore brackets
 
                 # Exit
                 break
@@ -317,8 +323,50 @@ class GcodeParser(FileManager):
                 break
 
 
+    def __parse_jobs(self):
+        
+        while True:
+            line = self.__read()
+
+            # Reached end of file
+            if line.find(self.FILE_END) > 0:
+                break
+            
+            # Get number of detected jobs
+            job_nb = len(self.g_file_attr["jobs"])
+
+            # Find any of the known job
+            for job_name in self.LIST_OF_KNOWN_JOBS:
+
+                # Job founded
+                if line.find(job_name) > 0:
+                    self.g_file_attr["jobs"].append(line[1:-2]) # Ignore brackets
+
+                    # First job
+                    if 0 != job_nb:
+                        del(file)
+                    
+                    #print(self.g_file.name()+self.g_file_attr["jobs"][job_nb])
+                    job_file_name = "%s%s_JOB%s_%s.otap" % ( self.g_file.path(), self.g_file.name().replace(".tap", ""), job_nb, self.g_file_attr["jobs"][job_nb].replace(" ", "_"))
+                    print(job_file_name)
+                    #
+                    file = FileManager(job_file_name,self.READ_WRITE)
+
+            if job_nb > 0:
+                #file.write(line)
+                pass
+                    
+
+
+
+
     def get_attr(self):
         return self.g_file_attr
+
+    
+    def get_jobs(self, num):
+        return self.jobs
+
 
     
     def print_attr(self):

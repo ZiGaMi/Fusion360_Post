@@ -32,9 +32,9 @@ import os
 class FileManager:
 
     # Access type
-    READ_WRITE  = "w+"  # This mode erase file content
+    READ_WRITE  = "r+"      # Puts pointer to start of file 
     READ_ONLY   = "r"
-    APPEND      = "a+"   # This mode puts pointer to EOF. Access: Read & Write
+    APPEND      = "a+"      # This mode puts pointer to EOF. Access: Read & Write
     
     # ===============================================================================
     # @brief:  Constructor
@@ -48,6 +48,7 @@ class FileManager:
     def __init__(self, file_name, access=READ_ONLY):
 
         self.file_name = file_name
+        self.file_ptr_line = 0
 
         try:
             if os.path.isfile(self.file_name):
@@ -80,6 +81,7 @@ class FileManager:
         line = ""
         try:
             line = self.file.readline()
+            self.file_ptr_line += 1
 
         except Exception as e:
             print(e)
@@ -95,6 +97,7 @@ class FileManager:
     def write(self, str):
         try:
             self.file.write(str)
+            self.file_ptr_line += 1
 
         except Exception as e:
             print(e)
@@ -132,6 +135,37 @@ class FileManager:
             print(e)
 
     # ===============================================================================
+    # @brief  Get file pointer
+    #
+    # @note     Pointer is being evaluated based on binary file value
+    #
+    # @return      void
+    # ===============================================================================
+    def get_ptr(self):
+        return self.file.tell()
+
+    # ===============================================================================
+    # @brief  Set file pointer
+    #
+    # @note     Pointer is being evaluated based on binary file value
+    #
+    # @param[in]    offset  - Pointer offset
+    # @return       void
+    # ===============================================================================
+    def set_ptr(self, offset):
+        self.file.seek()
+
+    # ===============================================================================
+    # @brief  Get file pointer line
+    #
+    # @note     This is acutual line in file
+    #
+    # @return      void
+    # ===============================================================================
+    def get_ptr_line(self):
+        return self.file_ptr_line
+
+    # ===============================================================================
     # @brief  Debug print
     #
     # @note     All debug prints can be enabled/disabled via that function
@@ -150,9 +184,47 @@ class FileManager:
 # ===============================================================================
 class GcodeParser(FileManager):
 
-    def __init__(self):
+    # String for parsing basis
+    HEADER_START    = "File:"
+    HEADER_END      = "Brief:"
+    TOOL_LIST       = "List of needed tools"
+    END             = "End of program"
+
+    # Possible CNC jobs
+    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOURS" ]
+
+
+
+
+    def __init__(self, file_name):
+        
+        # Open file
+        self.g_file = FileManager(file_name, FileManager.READ_ONLY)
+
+        # File attributes
+        self.g_file_attr = {
+            "name"      : "",
+            "author"    : "",
+            "date"      : "",
+            "time"      : "",
+            "brief"     : "",
+            "tool"      : "",
+            "jobs"      : [],
+        }
+
+
+    def __del__(self):
+        self.g_file.close()
+
+
+    def __parse_header(self):
         pass
 
+
+
+    def __parse_tool(self):
+        pass
+    
 
             
 

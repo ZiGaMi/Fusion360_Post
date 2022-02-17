@@ -22,7 +22,7 @@ import shutil
 import subprocess
 import xml.etree.ElementTree as ET
 
-from file_manager import FileManager, GcodeParser
+from file_manager import FileManager, GcodeParser, INTERMEDIATE_FILE_END
 
 # ===============================================================================
 #       CONSTANTS
@@ -69,9 +69,12 @@ def intro():
     print("===================================================================")
     print("")
 
-        
-
-
+# ===============================================================================
+# @brief:   Get all G-code files
+#
+# @param[in]    work_dir    - Working directory for searching
+# @return       g_files     - List of founded G-code inside working directory 
+# ===============================================================================
 def get_g_files(work_dir):
 
     g_files = []
@@ -100,6 +103,51 @@ def get_g_files(work_dir):
 
     return g_files
 
+# ===============================================================================
+# @brief:   Remove all intermediate G-code files
+#
+# @param[in]    work_dir    - Working directory for searching
+# @return       void
+# ===============================================================================
+def remove_intermediate_files(work_dir):
+
+    g_files = []
+
+    print("Deleting intermediate files...")
+
+    # Check if dir exist
+    if os.path.isdir( work_dir ):
+        for file in os.listdir( work_dir ):
+
+            # Get file name and extension
+            file_name, file_extension = os.path.splitext( file )
+
+            # Filter files
+            if INTERMEDIATE_FILE_END == file_extension:
+                os.remove(work_dir + "\\" + file)
+
+    else:
+        print("ERROR: Inputed directory does not exist!")
+
+    return g_files
+
+
+def parse_g_files(g_files):
+    g_files_parsed = []
+
+    # Parse all g codes
+    for idx, g_file in enumerate(g_files):
+        g_files_parsed.append( GcodeParser(g_file) )
+
+        # TODO: Remove when no more needed
+        #print("------------------------------------------------------------------------------------------")
+        #print(" [%s] %s\n" % (idx, g_file))
+        #print("------------------------------------------------------------------------------------------")
+
+    #print("\n")
+
+    return g_files_parsed
+
 
 # ===============================================================================
 # @brief:  Main entry function
@@ -115,19 +163,26 @@ def main():
     work_dir = input( "Input working directory: " )
 
     # Get g-code files
-    g_files_list = get_g_files( work_dir )
+    g_files_list = get_g_files(work_dir)
 
+    # Parse g-code files
+    g_files_parsed = parse_g_files(g_files_list)
 
+    # Create merged file
+    merged_file = FileManager(work_dir + "\\" + g_files_parsed[0].get_file_name() + "__Merged.tap", FileManager.WRITE_ONLY)
 
-    # Parse all g codes
-    g_files_parsed = []
-    for idx, g_file in enumerate(g_files_list):
-        print("------------------------------------------------------------------------------------------")
-        print(" [%s] %s\n" % (idx, g_file))
-        g_files_parsed.append( GcodeParser(g_file) )
-        print("------------------------------------------------------------------------------------------")
+    # Write header to merged file
 
+    # Write used tools
 
+    # Write jobs
+
+    # Write end program
+
+    # Delete intermediate files
+    remove_intermediate_files(work_dir)
+
+    # Outro
     input("\n\nPress any key to exit...\n")
 
 

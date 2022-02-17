@@ -16,6 +16,8 @@ import os
 #       CONSTANTS
 # ===============================================================================
 
+# Intermediate G-code file extension
+INTERMEDIATE_FILE_END = ".otap"
 
 # ===============================================================================
 #       FUNCTIONS
@@ -240,7 +242,7 @@ class GcodeParser(FileManager):
         self.g_file.close()
 
         # TODO: Remove only debug
-        self.print_attr()
+        #self.print_attr()
 
     # ===============================================================================
     # @brief  Desctructor
@@ -331,7 +333,7 @@ class GcodeParser(FileManager):
     def __parse_jobs(self):
         
         # Intermediate file name
-        out_file_name = "%s%s.otap" % ( self.g_file.path(), self.g_file.name().replace(".tap", ""))
+        out_file_name = "%s%s%s" % ( self.g_file.path(), self.g_file.name().replace(".tap", ""), INTERMEDIATE_FILE_END)
 
         # Create intermediate file
         file = FileManager(out_file_name,self.WRITE_ONLY)
@@ -363,6 +365,9 @@ class GcodeParser(FileManager):
         # Mark end of this file operation
         file.write("( End of **%s**)\n" % self.g_file_attr["file"] )
         file.write("( ================================================ )" )
+        
+        # Close file
+        file.close()
 
     # ===============================================================================
     # @brief    Get G code file attributes

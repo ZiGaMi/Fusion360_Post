@@ -174,7 +174,8 @@ class FileManager:
     # @return       void
     # ===============================================================================
     def __dbg_print(self, str):
-        print(str)
+        #print(str)
+        pass
 
 
 
@@ -185,8 +186,12 @@ class FileManager:
 class GcodeParser(FileManager):
 
     # String for parsing basis
-    HEADER_START    = "File:"
-    HEADER_END      = "Brief:"
+    SCRIPT_VER      = "Post script version:  "
+    FILE_NAME       = "File:   "
+    AUTHOR          = "Author: "
+    DATE            = "Date:   "
+    TIME            = "Time:   "
+    BRIEF           = "Brief:  "
     TOOL_LIST       = "List of needed tools"
     END             = "End of program"
 
@@ -194,8 +199,11 @@ class GcodeParser(FileManager):
     LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOURS" ]
 
 
-
-
+    # ===============================================================================
+    # @brief  Constructor
+    #
+    # @return      void
+    # ===============================================================================
     def __init__(self, file_name):
         
         # Open file
@@ -203,7 +211,8 @@ class GcodeParser(FileManager):
 
         # File attributes
         self.g_file_attr = {
-            "name"      : "",
+            "script"    : "",
+            "file"      : "",
             "author"    : "",
             "date"      : "",
             "time"      : "",
@@ -212,18 +221,115 @@ class GcodeParser(FileManager):
             "jobs"      : [],
         }
 
+        # Parse header
+        self.__parse_header()
 
+        # Parse tool
+        self.__parse_tool()
+
+        # Parse jobs
+        # TODO:
+
+        # Close file at the end
+        self.g_file.close()
+
+        # TODO: Remove only debug
+        self.print_attr()
+
+    # ===============================================================================
+    # @brief  Desctructor
+    #
+    # @return      void
+    # ===============================================================================
     def __del__(self):
         self.g_file.close()
 
+    # ===============================================================================
+    # @brief  Read line from file
+    #
+    # @note     Will remove comments if there are in the line
+    #
+    # @return      void
+    # ===============================================================================
+    def __read(self):
+        return self.g_file.read().replace("( ", "").replace(" )", "")
 
+    # ===============================================================================
+    # @brief  Parse header
+    #
+    # @note     Parsed values are stored in class variable g_file_attr
+    #
+    # @return      void
+    # ===============================================================================
     def __parse_header(self):
-        pass
+
+        # Read first line
+        line = self.__read()
+
+        # Parse script version
+        self.g_file_attr["script"] = line[len(self.SCRIPT_VER):-1] 
+
+        # Read separator
+        self.__read()
+
+        # Read file details
+        line = self.__read()
+        self.g_file_attr["file"] = line[len(self.FILE_NAME):-1]
+
+        line = self.__read()
+        self.g_file_attr["author"] = line[len(self.AUTHOR):-1]
+
+        line = self.__read()
+        self.g_file_attr["date"] = line[len(self.DATE):-1]
+
+        line = self.__read()
+        self.g_file_attr["time"] = line[len(self.TIME):-1]
+
+        line = self.__read()
+        self.g_file_attr["brief"] = line[len(self.BRIEF):-1]
 
 
-
+    # ===============================================================================
+    # @brief    Parse tool
+    #
+    # @return      void
+    # ===============================================================================
     def __parse_tool(self):
-        pass
+        
+        while True:
+            line = self.__read()
+
+            if line.find(self.TOOL_LIST) > 0:
+                
+                # Ignore separator
+                self.__read()
+
+                # Get tool
+                line = self.__read()
+                self.g_file_attr["tool"] = line[:-1]
+
+                # Exit
+                break
+            
+            # Safe line
+            if self.g_file.get_ptr_line() > 20:
+                print("ERROR: Tool set not fund in %s" % self.g_file.file_name)
+                break
+
+
+    def get_attr(self):
+        return self.g_file_attr
+
+    
+    def print_attr(self):
+        print(" Post ver.: %s" % self.g_file_attr["script"] )
+        print(" File:      %s" % self.g_file_attr["file"]   )
+        print(" Author:    %s" % self.g_file_attr["author"] )
+        print(" Date:      %s" % self.g_file_attr["date"]   )
+        print(" Time:      %s" % self.g_file_attr["time"]   )
+        print(" Brief:     %s" % self.g_file_attr["brief"]  )
+        print(" Tool:      %s" % self.g_file_attr["tool"]   )
+        print(" Jobs:      %s" % self.g_file_attr["jobs"]   )
     
 
             

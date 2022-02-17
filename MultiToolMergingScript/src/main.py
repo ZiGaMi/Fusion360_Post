@@ -22,7 +22,7 @@ import shutil
 import subprocess
 import xml.etree.ElementTree as ET
 
-from file_manager import FileManager
+from file_manager import FileManager, GcodeParser
 
 # ===============================================================================
 #       CONSTANTS
@@ -115,27 +115,18 @@ def main():
     work_dir = input( "Input working directory: " )
 
     # Get g-code files
-    g_files = get_g_files( work_dir )
-
-    # Open 1# file
-    g_file_0 = FileManager( g_files[0])
-    
-    # Merged file
-    g_file_merged = FileManager( work_dir + "\\out\\" + "Merged.tap")
-    g_file_merged.erase()
+    g_files_list = get_g_files( work_dir )
 
 
 
+    # Parse all g codes
+    g_files_parsed = []
+    for idx, g_file in enumerate(g_files_list):
+        print("------------------------------------------------------------------------------------------")
+        print(" [%s] %s\n" % (idx, g_file))
+        g_files_parsed.append( GcodeParser(g_file) )
+        print("------------------------------------------------------------------------------------------")
 
-    # Close files
-    g_file_0.close()
-    g_file_merged.close()
-
-    # Create parser
-    #parser = GcodeParser()
-
-    #tool = ExtTool()
-    #tool.open_file( "test" )
 
     input("\n\nPress any key to exit...\n")
 

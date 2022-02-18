@@ -341,6 +341,8 @@ def main():
         ext_tool = ExtTool()
         ext_tool.open_file(work_dir + "\\" + merged_file.name())
 
+    input("\n\nPress any key to exit...\n")
+
 
 # ===============================================================================
 #       CLASSES

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ExternalTool>
+  <Name>"Visual Studio Code"</Name>
+  <Target>"C:\Users\zigam\AppData\Local\Programs\Microsoft VS Code\Code.exe"</Target>
+</ExternalTool>
+

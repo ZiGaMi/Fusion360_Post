@@ -204,7 +204,7 @@ class GcodeParser(FileManager):
     FILE_END        = "End of program"
 
     # Possible CNC jobs
-    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOURS" ]
+    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOUR" ]
 
 
     # ===============================================================================
@@ -368,6 +368,9 @@ class GcodeParser(FileManager):
         
         # Close file
         file.close()
+
+    def name(self):
+        return self.g_file.name()
 
     # ===============================================================================
     # @brief    Get G code file attributes

@@ -175,14 +175,29 @@ def write_header(file, parsed_files):
     file.write( "(           List of merged files                   )\n" )
     file.write( "( ================================================ )\n" )
     for idx, parse_file in enumerate(parsed_files):
-        file.write( "( [%s]  %s )\n" % ( idx+1, parse_file.get_file_name() ))
+        file.write( "( [%s]  %s )\n" % ( idx+1, parse_file.name() ))
     file.write( "\n" )
 
 
 
 
 def write_list_of_tools(file, parsed_files):
-    pass
+    
+    file.write( "( ================================================ )\n" )
+    file.write( "(           List of used tools                     )\n" )
+    file.write( "( ================================================ )\n" )
+    for idx, parse_file in enumerate(parsed_files):
+        file.write( "( [%s]  %s  )\n" % ( idx+1, parse_file.get_tool() ))
+    file.write( "\n" )
+
+def write_list_of_operations(file, parsed_files):
+
+    file.write( "( ================================================ )\n" )
+    file.write( "(           List of operations                     )\n" )
+    file.write( "( ================================================ )\n" )
+    for idx, parse_file in enumerate(parsed_files):
+        file.write( "( [%s]  %s  )\n" % ( idx+1, str(parse_file.get_jobs()).replace("[","").replace("]","")))
+    file.write( "\n" )
 
 def write_safe_startup(file):
 
@@ -200,7 +215,32 @@ def write_safe_startup(file):
     file.write( "\n" )
 
 def write_jobs(file, work_dir):
-    pass
+    
+    file.write( "( ================================================ )\n" )
+    file.write( "(           CAM Features Start Code                )\n" )
+    file.write( "( ================================================ )\n" )
+    file.write( "\n" )
+
+    for work_dir_file in os.listdir( work_dir ):
+
+        # Get file name and extension
+        file_name, file_extension = os.path.splitext( work_dir_file )
+
+        # Filter files
+        if INTERMEDIATE_FILE_END == file_extension:
+            
+            inter_file = FileManager(work_dir+"\\"+work_dir_file, FileManager.READ_ONLY)
+
+            while True:
+                line = inter_file.read()
+
+                if '' == line:
+                    break
+                else:
+                    file.write(line)
+
+            inter_file.close()
+
 
 def write_end(file):
 
@@ -247,6 +287,9 @@ def main():
 
     # Write used tools
     write_list_of_tools(merged_file, g_files_parsed)
+
+    # Write list of operations
+    write_list_of_operations(merged_file, g_files_parsed)
 
     # Write safe starup file
     write_safe_startup(merged_file)

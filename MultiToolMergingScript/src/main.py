@@ -35,10 +35,10 @@ SCRIPT_VERSION = "V0.1.0"
 SUPPORT_FILE_END = ".tap"
 
 # Show merge script at end of program
-OPEN_END_SCRIPT = True
+OPEN_END_SCRIPT = False
 
 # Debug enabled
-DEBUG_EN = True
+DEBUG_EN = False
 
 
 # ===============================================================================
@@ -116,7 +116,7 @@ def remove_intermediate_files(work_dir):
 
     g_files = []
 
-    print("Deleting intermediate files...")
+    #print("Deleting intermediate files...")
 
     # Check if dir exist
     if os.path.isdir( work_dir ):
@@ -146,6 +146,7 @@ def parse_g_files(g_files):
     # Parse all g codes
     for idx, g_file in enumerate(g_files):
         g_files_parsed.append( GcodeParser(g_file) )
+        #print("Parsing %s..." % g_file)
 
     return g_files_parsed
 
@@ -336,12 +337,17 @@ def main():
     # Delete intermediate files
     remove_intermediate_files(work_dir)
 
+    # Success
+    print("Merging successfully finised!")
+    print("Output file: %s" % work_dir+"\\"+merged_file.name())
+
     # Outro
     if OPEN_END_SCRIPT:
         ext_tool = ExtTool()
         ext_tool.open_file(work_dir + "\\" + merged_file.name())
 
-    input("\n\nPress any key to exit...\n")
+    print("")
+    input("Press any key to exit...\n")
 
 
 # ===============================================================================

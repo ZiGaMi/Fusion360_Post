@@ -29,7 +29,7 @@ from file_manager import FileManager, GcodeParser, INTERMEDIATE_FILE_END
 # ===============================================================================
 
 # SCript version
-SCRIPT_VERSION = "V0.0.1"
+SCRIPT_VERSION = "V0.1.0"
 
 # Supported G-code file extension
 SUPPORT_FILE_END = ".tap"
@@ -134,7 +134,12 @@ def remove_intermediate_files(work_dir):
 
     return g_files
 
-
+# ===============================================================================
+# @brief:   Parse all founded G-files
+#
+# @param[in]    g_files         - All G-files founded inside working directory
+# @return       g_file_parsed   - Parsed all G-files
+# ===============================================================================
 def parse_g_files(g_files):
     g_files_parsed = []
 
@@ -142,16 +147,15 @@ def parse_g_files(g_files):
     for idx, g_file in enumerate(g_files):
         g_files_parsed.append( GcodeParser(g_file) )
 
-        # TODO: Remove when no more needed
-        #print("------------------------------------------------------------------------------------------")
-        #print(" [%s] %s\n" % (idx, g_file))
-        #print("------------------------------------------------------------------------------------------")
-
-    #print("\n")
-
     return g_files_parsed
 
-
+# ===============================================================================
+# @brief:   Write header to merged file
+#
+# @param[in]    file            - Merged file
+# @param[in]    g_file_parsed   - Parsed all G-files
+# @return       void
+# ===============================================================================
 def write_header(file, parsed_files):
     
     file.write( "( Copyright (c) 2022 Ziga Miklosic )\n" )
@@ -179,8 +183,13 @@ def write_header(file, parsed_files):
     file.write( "\n" )
 
 
-
-
+# ===============================================================================
+# @brief:   Write list of used tool to merged file
+#
+# @param[in]    file            - Merged file
+# @param[in]    g_file_parsed   - Parsed all G-files
+# @return       void
+# ===============================================================================
 def write_list_of_tools(file, parsed_files):
     
     file.write( "( ================================================ )\n" )
@@ -190,6 +199,13 @@ def write_list_of_tools(file, parsed_files):
         file.write( "( [%s]  %s  )\n" % ( idx+1, parse_file.get_tool() ))
     file.write( "\n" )
 
+# ===============================================================================
+# @brief:   Write list of operations to merged file
+#
+# @param[in]    file            - Merged file
+# @param[in]    g_file_parsed   - Parsed all G-files
+# @return       void
+# ===============================================================================
 def write_list_of_operations(file, parsed_files):
 
     file.write( "( ================================================ )\n" )
@@ -199,6 +215,12 @@ def write_list_of_operations(file, parsed_files):
         file.write( "( [%s]  %s  )\n" % ( idx+1, str(parse_file.get_jobs()).replace("[","").replace("]","")))
     file.write( "\n" )
 
+# ===============================================================================
+# @brief:   Write safe starupt line to merged file
+#
+# @param[in]    file            - Merged file
+# @return       void
+# ===============================================================================
 def write_safe_startup(file):
 
     file.write( "( ================================================ )\n" )
@@ -214,6 +236,13 @@ def write_safe_startup(file):
     file.write( "G90 G94 G91.1 G40 G49 G17 G21\n")
     file.write( "\n" )
 
+# ===============================================================================
+# @brief:   Write all collected jobs
+#
+# @param[in]    file        - Merged file
+# @param[in]    work_dir    - Working directory
+# @return       void
+# ===============================================================================
 def write_jobs(file, work_dir):
     
     file.write( "( ================================================ )\n" )
@@ -241,7 +270,12 @@ def write_jobs(file, work_dir):
 
             inter_file.close()
 
-
+# ===============================================================================
+# @brief:   Write end statement to merged file
+#
+# @param[in]    file            - Merged file
+# @return       void
+# ===============================================================================
 def write_end(file):
 
     file.write( "( ================================================ )\n" )
@@ -256,7 +290,6 @@ def write_end(file):
     
     # Close file at the end
     file.close()
-
 
 
 # ===============================================================================
@@ -301,14 +334,12 @@ def main():
     write_end(merged_file)
 
     # Delete intermediate files
-    input()
     remove_intermediate_files(work_dir)
 
     # Outro
-    input("\n\nPress any key to exit...\n")
-
-
-
+    if OPEN_END_SCRIPT:
+        ext_tool = ExtTool()
+        ext_tool.open_file(work_dir + "\\" + merged_file.name())
 
 
 # ===============================================================================

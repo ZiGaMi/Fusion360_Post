@@ -338,6 +338,11 @@ class GcodeParser(FileManager):
         # Create intermediate file
         file = FileManager(out_file_name,self.WRITE_ONLY)
         
+        file.write("( ================================================ )\n" )
+        file.write("( Start of %s)\n" % self.g_file.name() )
+        file.write("( ================================================ )\n" )
+        file.write("\n")
+
         # Go thru file
         while True:
             #line = self.__read()
@@ -357,15 +362,18 @@ class GcodeParser(FileManager):
                 # Job founded
                 if line.find(job_name) > 0:
                     self.g_file_attr["jobs"].append(line[1:-2]) # Ignore brackets
-                    file.write(raw_line)
+                    
+                    if job_nb == 0:
+                        file.write(raw_line)
 
             if job_nb > 0:
                 file.write(raw_line) 
 
         # Mark end of this file operation
-        file.write("( End of **%s**)\n" % self.g_file_attr["file"] )
-        file.write("( ================================================ )" )
-        
+        file.write("( End of %s)\n" % self.g_file.name() )
+        file.write("( ================================================ )\n" )
+        file.write("\n")
+
         # Close file
         file.close()
 

@@ -301,6 +301,7 @@ def main():
     write_end(merged_file)
 
     # Delete intermediate files
+    input()
     remove_intermediate_files(work_dir)
 
     # Outro

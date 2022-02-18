@@ -204,7 +204,7 @@ class GcodeParser(FileManager):
     FILE_END        = "End of program"
 
     # Possible CNC jobs
-    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOUR" ]
+    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOUR", "FACE" ]
 
 
     # ===============================================================================
@@ -270,6 +270,9 @@ class GcodeParser(FileManager):
     # @return      void
     # ===============================================================================
     def __parse_header(self):
+
+        # Read empty line
+        self.__read()
 
         # Read first line
         line = self.__read()

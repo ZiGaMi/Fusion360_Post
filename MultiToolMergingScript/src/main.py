@@ -283,7 +283,6 @@ def write_end(file):
     file.write( "(           End of program                         )\n" )
     file.write( "( ================================================ )\n" )
     file.write( "(  M5  - STOP SPINDLE ) \n" )
-    file.write( "(  M9  - COOLING OFF ) \n" )
     file.write( "(  M30 - PROGRAM END ) \n" )
     file.write( "M5\n" )
     file.write( "M30\n" )

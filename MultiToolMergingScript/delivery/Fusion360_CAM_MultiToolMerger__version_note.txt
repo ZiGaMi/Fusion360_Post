@@ -1,12 +1,43 @@
 ============================================================
+ Fusion360 CAM MultiToolMerger Version Notes
+============================================================
+
+Brief:
+    Script is for merging Fusion360 CAM output G-codes when using
+    multiple tools inside one setup. It simply copy all jobs from 
+    different separated files and join it to single G-code program.
+
+    Therefore there is no need to load new files into CNC machine
+    program all over again when chaning tools.
+
+============================================================
+ Version 0.2.0 (01.04.2022)
+============================================================
+
+ Compatability:
+   - This version is compatable with cnc4030_mach3.cps V0.1.0 and on
+
+ Features/Changes:
+   - Added new supported jobs
+   - Removed double comments
+	
+ Solved Issues:
+
+ Known Issues:
+   - External tool usage is not working
+
+ TODO: 
+   - Safe starup file is not being taken from original G-code
+   - End program is not being taken from original G-code
+
+============================================================
+
+============================================================
  Version 0.1.0 (18.02.2022)
 ============================================================
 
- Brief:
-    	Script for merging Fusion360 CAM output G-codes when using
-    	multiple tools inside one setup.
-
-	This version is compatable with: cnc4030_mach3.cps V0.1.0
+ Compatability:
+   - This version is compatable with cnc4030_mach3.cps V0.1.0 and on
 
  Features/Changes:
    - Takes all G-codes from working directory

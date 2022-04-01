@@ -29,7 +29,7 @@ from file_manager import FileManager, GcodeParser, INTERMEDIATE_FILE_END
 # ===============================================================================
 
 # SCript version
-SCRIPT_VERSION = "V0.1.0"
+SCRIPT_VERSION = "V0.2.0"
 
 # Supported G-code file extension
 SUPPORT_FILE_END = ".tap"

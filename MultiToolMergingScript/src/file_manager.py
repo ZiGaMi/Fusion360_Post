@@ -204,7 +204,7 @@ class GcodeParser(FileManager):
     FILE_END        = "End of program"
 
     # Possible CNC jobs
-    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOUR", "FACE" ]
+    LIST_OF_KNOWN_JOBS = [ "2D ADAPTIVE", "DRILL", "2D CONTOUR", "FACE", "ENGRAVE" ]
 
 
     # ===============================================================================
